@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { EventoService } from '../services/evento.service';
+import { Evento } from '../models/Evento';
 
 @Component({
   selector: 'app-eventos',
@@ -7,44 +8,47 @@ import { EventoService } from '../services/evento.service';
   styleUrls: ['./eventos.component.scss'],
 })
 export class EventosComponent implements OnInit {
-  public eventos: any = [];
-  public eventosFiltrados: any = [];
+  public eventos: Evento[] = [];
+  public eventosFiltrados: Evento[] = [];
   public larguraImg: number = 100;
   public margemImg: number = 2;
   public exibirImg: boolean = true;
-  
-  private _filtroLista: string = '';
-  public get filtroLista(): string{
-    return this._filtroLista;
+
+  private filtroListado: string = '';
+  public get filtroLista(): string {
+    return this.filtroListado;
   }
-  public set filtroLista(value:string){
-    this._filtroLista = value;
-    this.eventosFiltrados = this.filtroLista ? this.filtrarEventos(this.filtroLista) : this.eventos;
+  public set filtroLista(value: string) {
+    this.filtroListado = value;
+    this.eventosFiltrados = this.filtroLista
+      ? this.filtrarEventos(this.filtroLista)
+      : this.eventos;
   }
-  filtrarEventos(filtrarPor:string): any {
+  public filtrarEventos(filtrarPor: string): Evento[] {
     filtrarPor = filtrarPor.toLocaleLowerCase();
     return this.eventos.filter(
-        (ev:{tema:string, local:string}) => ev.tema.toLocaleLowerCase().indexOf(filtrarPor) !== -1 ||
+      (ev: { tema: string; local: string }) =>
+        ev.tema.toLocaleLowerCase().indexOf(filtrarPor) !== -1 ||
         ev.local.toLocaleLowerCase().indexOf(filtrarPor) !== -1
-    )
+    );
   }
 
-  constructor(private eventoService:EventoService) {}
+  constructor(private eventoService: EventoService) {}
 
-  ngOnInit() {
+  public ngOnInit(): void {
     this.getEventos();
   }
 
-  mostrarImg() {
+  public mostrarImg(): void {
     this.exibirImg = !this.exibirImg;
   }
 
-  public getEventos():void {
+  public getEventos(): void {
     this.eventoService.getEventos().subscribe(
-      (response) => {
+      (response: Evento[]) => {
         this.eventos = response;
         this.eventosFiltrados = this.eventos;
-    },
+      },
       (error) => console.log(error)
     );
   }

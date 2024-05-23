@@ -7,8 +7,8 @@ export interface Evento {
     local:string;
     data:Date;
     tema:string;
-    qtdpessoas:number;
-    imagemurl:string;
+    qtdPessoas:number;
+    imagemURL:string;
     telefone:string;
     email:string;
 
